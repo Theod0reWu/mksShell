@@ -34,6 +34,8 @@ Try starting with these restrictions on input:
 - You can limit piping (|) to a single pipe.
 */
 
+#include "shell.h"
+
 /*
 char ** parse_args(char * line) ;
 The line argument is the command typed into the shell.

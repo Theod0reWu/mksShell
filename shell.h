@@ -13,3 +13,5 @@
 #include <math.h>
 
 #include <signal.h>
+
+char ** parse_args(char * line);
