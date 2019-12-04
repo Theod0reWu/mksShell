@@ -5,10 +5,11 @@ int main() {
   char line[256] ;
   int i ;
   char ** lofParseSpace ;
-  char line[256];
+  char ** args;
   while (1) {
     // INFINITE LOOP!!
     printf("%s$ ", getcwd(dir, sizeof(dir)) ) ; // prints out current path - where we at
+
 
     fgets(line, 256, stdin) ; // transfer input to line
     *strchr(line, '\n') = '\0';
@@ -19,11 +20,21 @@ int main() {
       //printf("exiting\n");
       return 0;
     }
-    else if (){}
-    else{}
-    printf("%s\n", line);
+    //else if (){}
+    else{
+      args = parse_args_space(line);
+      
+      //char * i = args[0];
+      //int e = 1;
+      //while (i != NULL){
+      //  printf("%s\n", i);
+      //  i = args[e];
+      //  ++e;
+      //}
+    }
 
     strcpy(line, "");
+    args = '\0';
   }
 
   return 0 ;
