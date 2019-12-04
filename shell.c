@@ -36,6 +36,16 @@ Try starting with these restrictions on input:
 - You can limit piping (|) to a single pipe.
 */
 
+/*
+char ** parse_args_semicolon(char * line) ;
+The line argument is what was typed into the shell.
+It separates what was typed in at the semicolons and puts each command into char ** args
+returns char ** args
+*/
+char ** parse_args_semicolon(char * line) {
+
+}
+
 
 /*
 char ** parse_args(char * line) ;
