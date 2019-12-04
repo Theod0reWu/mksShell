@@ -5,7 +5,6 @@ int main() {
   char line[256] ;
   int i ;
   char ** lofParseSpace ;
-  char line[256];
   while (1) {
     // INFINITE LOOP!!
     printf("%s$ ", getcwd(dir, sizeof(dir)) ) ; // prints out current path - where we at
@@ -19,7 +18,10 @@ int main() {
       //printf("exiting\n");
       return 0;
     }
-    else if (){}
+    else if (strcmp(line, "cd")) {
+      // we are changing directories
+      chdir("..") ;
+    }
     else{}
     printf("%s\n", line);
 
