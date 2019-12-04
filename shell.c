@@ -1,3 +1,5 @@
+#include "shell.h"
+
 /*
 You (and a partner if desired - highly suggested) are to write a shell.
 The shell should implement as many of these features as possible.
@@ -34,25 +36,24 @@ Try starting with these restrictions on input:
 - You can limit piping (|) to a single pipe.
 */
 
-#include "shell.h"
 
 /*
 char ** parse_args(char * line) ;
 The line argument is the command typed into the shell.
-It seperates this command at the spaces and puts each part into char * a
-returns char * a
+It seperates this command at the spaces and puts each part into char ** args
+returns char ** args
  */
-char ** parse_args(char * line) {
-  char ** a = calloc(256, sizeof(char *)) ; // initialize the array that will hold the args
-  int i = 0 ;
-  char * q = strsep(&line, " ") ;
-  while (q != NULL) {
-    if (strcmp(q, "")) {
-      // compare the current char entered into the shell to "" to see if it's empty
-      a[i] = q ;
-      i++ ;
-    }
-    q = strsep(&line, " ") ;
+char ** parse_args_space(char * line) {
+  //char ** args = calloc(256, sizeof(char *)) ;
+  char ** args = malloc(500) ;
+  char * current = strsep(&line, " ") ;
+  int x = 0 ;
+  while (current) {
+    //printf("%s\n", current) ;
+    args[x] = current ;
+    // keep going to check for more arguments
+    current = strsep(&line, " ") ;
+    x++ ;
   }
-  return a ;
+  return args ;
 }
