@@ -42,8 +42,15 @@ The line argument is what was typed into the shell.
 It separates what was typed in at the semicolons and puts each command into char ** args
 returns char ** args
 */
-char ** parse_args_semicolon(char * line) {
 
+char ** parse_args_semicolon(char * line) {
+  char ** a = calloc(256, sizeof(char **)) ;
+  int i ;
+  char * q ;
+  for (i = 0 ; (q = strsep(&line, ";")) ; i++) {
+    a[i] = q ;
+  }
+  return a ;
 }
 
 
