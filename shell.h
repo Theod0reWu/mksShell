@@ -7,6 +7,7 @@
 
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <dirent.h>
 
@@ -14,4 +15,4 @@
 
 #include <signal.h>
 
-char ** parse_args(char * line);
+char ** parse_args_space(char * line);
