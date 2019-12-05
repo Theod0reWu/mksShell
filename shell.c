@@ -14,9 +14,7 @@ The first being the most basic up to the last which is the most complex.
 3. Implement simple redirection using > (redirecting stdout) and < (redirecting stdin).
 4. Implement simple pipes, that is: ls | wc would run ls and use the output from ls as the input for wc.
    Check out popen() for this.
-
 All of these commands work in bash, so use it to check out the functionality of each feature if you are unclear about anything.
-
 Specific requirements
 1. Every function you write must have a function header describing the arguments, return value and what the function does.
   - Use modular design liberally. This is a large program.
@@ -28,7 +26,6 @@ Specific requirements
   - An example of the readme file can be found in the github repository for this assignment
 3. This project should use separate C files as necessary.
 4. The project should be built using make and a makefile, I will only compile by using make.
-
 Try starting with these restrictions on input:
 - To make your life easier, you could require that all items on the command line are to be separated by a single space.
 - When parsing the line, it might help to count the number of tokens (individual pieces), before parsing.
@@ -42,15 +39,8 @@ The line argument is what was typed into the shell.
 It separates what was typed in at the semicolons and puts each command into char ** args
 returns char ** args
 */
-
 char ** parse_args_semicolon(char * line) {
-  char ** a = calloc(256, sizeof(char **)) ;
-  int i ;
-  char * q ;
-  for (i = 0 ; (q = strsep(&line, ";")) ; i++) {
-    a[i] = q ;
-  }
-  return a ;
+
 }
 
 
