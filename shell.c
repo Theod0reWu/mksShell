@@ -42,7 +42,6 @@ The line argument is what was typed into the shell.
 It separates what was typed in at the semicolons and puts each command into char ** args
 returns char ** args
 */
-
 char ** parse_args_semicolon(char * line) {
   char ** a = calloc(256, sizeof(char **)) ;
   int i ;
@@ -66,10 +65,15 @@ char ** parse_args_space(char * line) {
   int x = 0 ;
   while (current) {
     //printf("%s\n", current) ;
-    args[x] = current ;
+    if (strcmp(current, "") != 0) {
+      args[x] = current ;
+    }
+    //printf("|%s|\n", current);
+    //printf("line|%s|\n", line);
     // keep going to check for more arguments
     current = strsep(&line, " ") ;
     x++ ;
   }
+  args[x] = '\0' ;
   return args ;
 }
