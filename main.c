@@ -28,8 +28,13 @@ int main() {
     }
     else if (strcmp(args[0], "cd") == 0) {
       // we need to change the directory to what the user typed in
-      if (args[0] != NULL) {
+      //printf("|%s|\n", args[1]);
+      if (args[1] != NULL && strcmp(args[1], "") != 0) {
         if (chdir(args[1]) == -1) printf("Error with changing directory: %s\n", strerror(errno)) ;
+      }
+      else {
+        // go to the home directory instead
+        chdir(getpwuid(getuid())->pw_dir) ;
       }
     }
     else{
