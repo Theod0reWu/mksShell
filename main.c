@@ -19,12 +19,13 @@ int main() {
     //printf("%i\n", strcmp(line, "exit"));
     i = 0 ;
     args = parse_args_space(line) ; // now the input has been separated by spaces
+    //printf("%s\n", args[0]) ;
 
     if (strcmp(args[0], "exit") == 0){
       //printf("exiting\n");
       return 0;
     }
-    else if (strcmp(args[0], "cd")) {
+    else if (strcmp(args[0], "cd") == 0) {
       // we need to change the directory to what the user typed in
       if (args[0] != NULL) {
         if (chdir(args[1]) == -1) printf("Error with changing directory: %s\n", strerror(errno)) ;
