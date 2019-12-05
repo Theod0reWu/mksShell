@@ -1,3 +1,4 @@
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -15,4 +16,5 @@
 
 #include <signal.h>
 
-char ** parse_args_space(char * line);
+char ** parse_args_space(char * line) ;
+char ** parse_args_semicolon(char * line) ;
