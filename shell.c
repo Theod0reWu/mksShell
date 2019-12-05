@@ -53,8 +53,6 @@ char ** parse_args_semicolon(char * line) {
   return a ;
 }
 
-
-
 /*
 char ** parse_args(char * line) ;
 The line argument is the command typed into the shell.
