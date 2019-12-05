@@ -31,19 +31,19 @@ int main() {
       if (args[0] != NULL) {
         if (chdir(args[1]) == -1) printf("Error with changing directory: %s\n", strerror(errno)) ;
       }
+    }
     else{
-      args = parse_args_space(line);
       if (fork() == 0){
         execvp(args[0], args);
         printf("\'%s\' is not recognized as an internal or external command,\noperable program or batch file.\n", args[0]);
         return 0;
       }
       else {
-        //wait(NULL);
-        printf("parent: %i child: %i\n", getpid(), wait(NULL));
-        printf("%i\n", parent_pid);
+        wait(NULL);
+        //printf("parent: %i child: %i\n", getpid(), wait(NULL));
+        //printf("%i\n", parent_pid);
       }
-
+    }
     /*
     AN IDEA FOR WHEN WE HAVE TO SEPARATE COMMANDS BY SEMI-COLONS:
     while (commands[i] != NULL) {
