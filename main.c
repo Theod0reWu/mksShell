@@ -6,6 +6,7 @@ int main() {
   int i ;
   char ** lofParseSpace ;
   char ** args;
+  int parent_pid = getpid();
   while (1) {
     // INFINITE LOOP!!
     printf("%s$ ", getcwd(dir, sizeof(dir)) ) ; // prints out current path - where we at
@@ -20,13 +21,22 @@ int main() {
       //printf("exiting\n");
       return 0;
     }
-    else if (strcmp(line, "cd")) {
+    else if (strcmp(line, "cd") == 0) {
       // we need to change the directory
       chdir("..") ;
     }
     else{
       args = parse_args_space(line);
-
+      if (fork() == 0){
+        execvp(args[0], args);
+        printf("\'%s\' is not recognized as an internal or external command,\noperable program or batch file.\n", args[0]);
+        return 0;
+      }
+      else {
+        //wait(NULL);
+        printf("parent: %i child: %i\n", getpid(), wait(NULL));
+        printf("%i\n", parent_pid);
+      }
       //char * i = args[0];
       //int e = 1;
       //while (i != NULL){
