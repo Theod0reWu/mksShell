@@ -20,7 +20,6 @@ int main() {
     i = 0 ;
     while (commands[i] != NULL) {
       args = parse_args_space(commands[i]) ; // now the input has been separated by spaces
-      //printf("%s\n", args[0]) ;
 
       if (strcmp(args[0], "exit") == 0){
         //printf("exiting\n");
@@ -50,6 +49,7 @@ int main() {
         }
       }
       i++ ;
+      free(args);
     }
     /*
     AN IDEA FOR WHEN WE HAVE TO SEPARATE COMMANDS BY SEMI-COLONS:
@@ -62,6 +62,7 @@ int main() {
     */
 
     strcpy(line, "");
+    free(commands);
     args = '\0';
   } // end of initial while loop!!
 

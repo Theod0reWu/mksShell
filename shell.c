@@ -64,8 +64,9 @@ char ** parse_args_space(char * line) {
   char * current = strsep(&line, " ") ;
   int x = 0 ;
   while (current) {
-    //printf("%s\n", current) ;
-    if (strcmp(current, "") != 0) {
+    printf("|%s|\n", current) ;
+    printf("%i\n", strcmp(current,""));
+    if (strcmp(current,"") != 0) {
       args[x] = current ;
     }
     //printf("|%s|\n", current);
