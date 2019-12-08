@@ -64,16 +64,16 @@ char ** parse_args_space(char * line) {
   char * current = strsep(&line, " ") ;
   int x = 0 ;
   while (current) {
-    printf("|%s|\n", current) ;
-    printf("%i\n", strcmp(current,""));
+    //printf("|%s|\n", current) ;
+    //printf("%i\n", strcmp(current,""));
     if (strcmp(current,"") != 0) {
       args[x] = current ;
+      x++;
     }
     //printf("|%s|\n", current);
     //printf("line|%s|\n", line);
     // keep going to check for more arguments
     current = strsep(&line, " ") ;
-    x++ ;
   }
   args[x] = '\0' ;
   return args ;
