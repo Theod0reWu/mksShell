@@ -47,7 +47,10 @@ char ** parse_args_semicolon(char * line) {
   int i ;
   char * q ;
   for (i = 0 ; (q = strsep(&line, ";")) ; i++) {
-    a[i] = q ;
+    if (strcmp(q,"") != 0){
+      a[i] = q ;
+    }else{i--;}
+    //printf("|%s|\n",a[i] );
   }
   return a ;
 }
@@ -60,7 +63,7 @@ returns char ** args
  */
 char ** parse_args_space(char * line) {
   //char ** args = calloc(256, sizeof(char *)) ;
-  char ** args = malloc(500) ;
+  char ** args = calloc(256, sizeof(char *)) ;
   char * current = strsep(&line, " ") ;
   int x = 0 ;
   while (current) {

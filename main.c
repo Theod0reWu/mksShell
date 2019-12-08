@@ -38,6 +38,7 @@ int main() {
       }
       else{
         if (fork() == 0){
+          printf (args[0]);
           execvp(args[0], args);
           printf("\'%s\' is not recognized as an internal or external command,\noperable program or batch file.\n", args[0]);
           return 0;
