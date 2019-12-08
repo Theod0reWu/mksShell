@@ -18,3 +18,5 @@
 
 char ** parse_args_space(char * line) ;
 char ** parse_args_semicolon(char * line) ;
+int redirecting(char ** args);
+int execute(char ** command);

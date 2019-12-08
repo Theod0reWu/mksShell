@@ -9,9 +9,13 @@ int main() {
   int parent_pid = getpid();
   while (1) {
     // INFINITE LOOP!!
+    //printf("%i\n", fileno(stdin));
     printf("%s$ ", getcwd(dir, sizeof(dir)) ) ; // prints out current path - where we at
-
     fgets(line, 256, stdin) ; // transfer input to line
+    //printf("uh oh\n");
+
+    //printf("|%s|\n", line);
+
     *strchr(line, '\n') = '\0';
     commands = parse_args_semicolon(line) ; // these are all of the commands the user entered into the shell
 
@@ -37,16 +41,13 @@ int main() {
         }
       }
       else{
-        if (fork() == 0){
-          printf (args[0]);
-          execvp(args[0], args);
-          printf("\'%s\' is not recognized as an internal or external command,\noperable program or batch file.\n", args[0]);
-          return 0;
+        int w = redirecting(args);
+        //printf("%i\n", w);
+        if (w == -1){
+          return -1;
         }
-        else {
-          wait(NULL);
-          //printf("parent: %i child: %i\n", getpid(), wait(NULL));
-          //printf("%i\n", parent_pid);
+        else if (w != 0 && execute(args) != 0){
+          return -1; //if the child did not execute properly, kill the child process
         }
       }
       i++ ;
@@ -66,6 +67,5 @@ int main() {
     free(commands);
     args = '\0';
   } // end of initial while loop!!
-
   return 0 ;
 }
