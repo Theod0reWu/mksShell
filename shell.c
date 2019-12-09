@@ -85,6 +85,28 @@ char ** parse_args_space(char * line) {
   args[x] = '\0' ;
   return args ;
 }
+
+/*
+*/
+int pipe(char ** args) {
+  FILE * p ;
+  char ch ;
+  p = popen(args[],"r"); /* Unix */
+  if (p == NULL) {
+    printf("What process are you trying to run??!!\n") ;
+    return 1 ;
+  }
+  else {
+    // execute
+    execvp(args[2], args) ;
+  }
+  while ( (ch = fgetc(p)) != EOF) {
+    putchar(ch) ;
+    pclose(p) ;
+
+    return 0;
+}
+
 /*
 void redirecting(char ** args);
 The argument is the redirection command with either > or < (but these are not as the first argument)
@@ -103,14 +125,17 @@ int redirecting(char ** args){
   }
   //printf("%i\n", i);
   //printf("%s\n", redir);
-  if (i == 1 || redir == NULL){return -2;} // -2 = not in args
+  if (i == 1 || redir == NULL) return -2 ; // -2 = not in args
 
   if (strcmp(redir,"<") == 0){
     //printf("redirecting\n");
     copy = dup(fileno(stdin)); //stdin should be 0
     f =  open(args[i], O_RDONLY);
 
-    if (f < 0){printf("The system cannot find the file specified.\n");return 0;}
+    if (f < 0){
+      printf("The system cannot find the file specified.\n");
+      return 0;
+    }
 
     dup2(f, fileno(stdin));
     args[i-1] = '\0';
@@ -121,7 +146,8 @@ int redirecting(char ** args){
     return worked;
   } else if (strcmp(redir,">") == 0){
     // here is what happens when it's the ">" sign instead
-
+    //printf("Redirecting!\n") ;
+    copy = dup(fileno(stdout)) ; //
   }
 
   return -2;
