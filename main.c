@@ -53,15 +53,6 @@ int main() {
       i++ ;
       free(args);
     }
-    /*
-    AN IDEA FOR WHEN WE HAVE TO SEPARATE COMMANDS BY SEMI-COLONS:
-    while (commands[i] != NULL) {
-      // now we look at this specific command
-      args = parse_args_space(commands[i]) ;
-      // args includes the command at index 0 and any additional arguments such as -l or -a for example
-
-    } // while loop for commands is closed off here!
-    */
 
     strcpy(line, "");
     free(commands);
