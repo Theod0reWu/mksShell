@@ -40,7 +40,7 @@ Try starting with these restrictions on input:
 char ** parse_args_semicolon(char * line) ;
 The line argument is what was typed into the shell.
 It separates what was typed in at the semicolons and puts each command into char ** args
-returns char ** a
+returns char ** a, which is the array of the command and any arguments it comes with
 */
 char ** parse_args_semicolon(char * line) {
   char ** a = calloc(256, sizeof(char **)) ;
@@ -49,7 +49,10 @@ char ** parse_args_semicolon(char * line) {
   for (i = 0 ; (q = strsep(&line, ";")) ; i++) {
     if (strcmp(q,"") != 0){
       a[i] = q ;
-    }else{i--;}
+    }
+    else {
+      i-- ;
+    }
     //printf("|%s|\n",a[i] );
   }
   return a ;
@@ -60,7 +63,7 @@ char ** parse_args(char * line) ;
 The line argument are the seperate args without the semicolons
 It seperates this command at the spaces and puts each part into char ** args
 It also gets rid of spaces
-returns char ** args
+returns char ** args, which is the array of the command and any arguments it comes with
  */
 char ** parse_args_space(char * line) {
   //char ** args = calloc(256, sizeof(char *)) ;
@@ -82,12 +85,11 @@ char ** parse_args_space(char * line) {
   args[x] = '\0' ;
   return args ;
 }
-/* 
+/*
 void redirecting(char ** args);
-the argument is the redirection command with either > or < 
-(not as the first argument)
-the next thing after the >,< should be the file name
-it executes the command and returns 0 if it worked
+The argument is the redirection command with either > or < (but these are not as the first argument)
+The next thing after the >,< should be the file name
+This executes the command and returns 0 if it worked
 */
 int redirecting(char ** args){
   int f;
@@ -118,6 +120,7 @@ int redirecting(char ** args){
     //printf("file closed\n");
     return worked;
   } else if (strcmp(redir,">") == 0){
+    // here is what happens when it's the ">" sign instead
 
   }
 
@@ -126,8 +129,9 @@ int redirecting(char ** args){
 
 /*
 int execute(char ** command);
-it takes the command given and executes it by forking 
-it returns 0 if it worked
+It takes the command given
+This executes the command given by forking
+This returns 0 if it worked!
 */
 int execute(char ** args){
   if (fork() == 0){
