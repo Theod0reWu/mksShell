@@ -41,12 +41,12 @@ int main() {
         }
       }
       else{
-        int w = redirecting(args);
+        //int w = redirecting(args);
         //printf("%i\n", w);
-        if (w == -1){
+        if (is_redirect(commands[i]) && redirecting(commands[i]) == -1){
           return -1;
         }
-        else if (w != 0 && execute(args) != 0){
+        else if (execute(args) != 0){
           return -1; //if the child did not execute properly, kill the child process
         }
       }

@@ -66,24 +66,26 @@ It also gets rid of spaces
 returns char ** args, which is the array of the command and any arguments it comes with
  */
 char ** parse_args_space(char * line) {
-  //char ** args = calloc(256, sizeof(char *)) ;
-  char ** args = calloc(256, sizeof(char *)) ;
-  char * current = strsep(&line, " ") ;
-  int x = 0 ;
-  while (current) {
-    //printf("|%s|\n", current) ;
-    //printf("%i\n", strcmp(current,""));
-    if (strcmp(current,"") != 0) {
-      args[x] = current ;
-      x++;
-    }
-    //printf("|%s|\n", current);
-    //printf("line|%s|\n", line);
-    // keep going to check for more arguments
-    current = strsep(&line, " ") ;
+  return parse_args(line, " ") ;
+}
+
+char ** parse_args(char * line, char * del) {
+  char ** a = calloc(256, sizeof(char **)) ;
+  int i ;
+  char * q ;
+  for (i = 0 ; (q = strsep(&line, del)) ; i++) {
+    if (strcmp(q,"") != 0){
+      a[i] = q ;
+    }else{i--;}
+    //printf("|%s|\n",a[i] );
   }
-  args[x] = '\0' ;
-  return args ;
+  return a ;
+}
+
+/*
+*/
+int is_dir(char * line){
+  return strchr(line, '<') == NULL && strchr(line, '>') == NULL;
 }
 
 /*
@@ -113,21 +115,16 @@ The argument is the redirection command with either > or < (but these are not as
 The next thing after the >,< should be the file name
 This executes the command and returns 0 if it worked
 */
-int redirecting(char ** args){
+int redirecting(char * line){
   int f;
   int copy;
   int worked = 0;
-
-  int i; char * redir = args[0];
-  for(i = 1; redir != NULL && strcmp(redir, "<") != 0 && strcmp(redir, ">") != 0; i++){
-    //printf("%s\n", redir);
-    redir = args[i];
-  }
-  //printf("%i\n", i);
-  //printf("%s\n", redir);
-  if (i == 1 || redir == NULL) return -2 ; // -2 = not in args
+  char ** redir_parts;
+  char ** args;
 
   if (strcmp(redir,"<") == 0){
+    redir_parts = parse_args(line, ">");
+    args = parse_args(redir_parts[0], " ");
     //printf("redirecting\n");
     copy = dup(fileno(stdin)); //stdin should be 0
     f =  open(args[i], O_RDONLY);
@@ -161,7 +158,7 @@ This returns 0 if it worked!
 */
 int execute(char ** args){
   if (fork() == 0){
-    printf (args[0]);
+    //printf(args[0]);
     execvp(args[0], args);
     printf("\'%s\' is not recognized as an internal or external command,\noperable program or batch file.\n", args[0]);
     return -1;
