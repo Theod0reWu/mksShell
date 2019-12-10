@@ -53,6 +53,7 @@ int main() {
           }
           w = 1;
         }
+        /*
         // PIPINGGGGGG
         else if (is_piping(commands[i])) {
           int backupIN = dup(STDIN_FILENO) ;
@@ -67,6 +68,7 @@ int main() {
           dup2(backupOUT, STDOUT_FILENO);
           // not sure about whether we should return an int or not
         }
+        */
         else if (execute(args) != 0) {
           return -1; //if the child did not execute properly, kill the child process
         }
