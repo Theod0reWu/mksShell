@@ -82,18 +82,18 @@ char ** parse_args(char * line, char * del) {
   return a ;
 }
 
-/*
-*/
-int is_dir(char * line){
+
+
+int is_redirect(char * line){
   return strchr(line, '<') == NULL && strchr(line, '>') == NULL;
 }
 
 /*
-*/
 int pipe(char ** args) {
   FILE * p ;
   char ch ;
-  p = popen(args[],"r"); /* Unix */
+  p = popen(args[],"r"); /* Unix 
+
   if (p == NULL) {
     printf("What process are you trying to run??!!\n") ;
     return 1 ;
@@ -109,6 +109,8 @@ int pipe(char ** args) {
     return 0;
 }
 
+*/
+
 /*
 void redirecting(char ** args);
 The argument is the redirection command with either > or < (but these are not as the first argument)
@@ -122,7 +124,7 @@ int redirecting(char * line){
   char ** redir_parts;
   char ** args;
 
-  if (strcmp(redir,"<") == 0){
+  if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, ">");
     args = parse_args(redir_parts[0], " ");
     //printf("redirecting\n");
@@ -141,7 +143,7 @@ int redirecting(char * line){
     close(f);
     //printf("file closed\n");
     return worked;
-  } else if (strcmp(redir,">") == 0){
+  } else if (strchr(line,'>') != NULL){
     // here is what happens when it's the ">" sign instead
     //printf("Redirecting!\n") ;
     copy = dup(fileno(stdout)) ; //
