@@ -176,7 +176,7 @@ int redirecting(char * line){
     args = parse_args(redir_parts[0], " ");
     //printf("redirecting\n");
     copy = dup(fileno(stdin)); //stdin should be 0
-    f =  open(args[i], O_RDONLY);
+    f = open(args[i], O_RDONLY); // where is i coming from? do you want to loop?
 
     if (f < 0){
       printf("The system cannot find the file specified.\n");
@@ -184,7 +184,7 @@ int redirecting(char * line){
     }
 
     dup2(f, fileno(stdin));
-    args[i-1] = '\0';
+    args[i-1] = '\0'; /// need to correct i here
     worked = execute(args); //-1 = command failed
     dup2(copy, fileno(stdin));
     close(f);
