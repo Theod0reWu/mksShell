@@ -85,7 +85,7 @@ char ** parse_args(char * line, char * del) {
 
 
 int is_redirect(char * line){
-  return strchr(line, '<') == NULL && strchr(line, '>') == NULL;
+  return strchr(line, '<') != NULL || strchr(line, '>') != NULL;
 }
 
 /*
@@ -123,13 +123,22 @@ int redirecting(char * line){
   int worked = 0;
   char ** redir_parts;
   char ** args;
+  char ** files;
 
   if (strchr(line,'<') != NULL){
-    redir_parts = parse_args(line, ">");
+    redir_parts = parse_args(line, "<");
+    int nump;
+    for (nump = 0; redir_parts[nump] != NULL; nump++){NULL;}
+    //if (nump < 2) {printf("The syntax of the command is incorrect.\n");return 0;}
+
+
     args = parse_args(redir_parts[0], " ");
+    files = parse_args(redir_parts[1], " ");
     //printf("redirecting\n");
+    
     copy = dup(fileno(stdin)); //stdin should be 0
-    f =  open(args[i], O_RDONLY);
+    //printf("%s\n", redir_parts[1]);
+    f =  open(files[0], O_RDONLY);
 
     if (f < 0){
       printf("The system cannot find the file specified.\n");
@@ -137,7 +146,6 @@ int redirecting(char * line){
     }
 
     dup2(f, fileno(stdin));
-    args[i-1] = '\0';
     worked = execute(args); //-1 = command failed
     dup2(copy, fileno(stdin));
     close(f);

@@ -22,8 +22,10 @@ int main() {
       //printf("%s\n", line);
       //printf("%i\n", strcmp(line, "exit"));
     i = 0 ;
+    char commandcopy[256];
     while (commands[i] != NULL) {
-      args = parse_args_space(commands[i]) ; // now the input has been separated by spaces
+      strcpy(commandcopy, commands[i]);
+      args = parse_args_space(commandcopy) ; // now the input has been separated by spaces
 
       if (strcmp(args[0], "exit") == 0){
         //printf("exiting\n");
@@ -41,12 +43,17 @@ int main() {
         }
       }
       else{
-        //int w = redirecting(args);
-        //printf("%i\n", w);
-        if (is_redirect(commands[i]) && redirecting(commands[i]) == -1){
-          return -1;
+        //printf("%s\n",commands[i] );
+        //printf("%i\n",is_redirect(commands[i]) );
+        int w = 0;
+        if (is_redirect(commands[i])){
+          //printf("is redirecting\n");
+          if (redirecting(commands[i]) == -1){
+            return -1;
+          }
+          w = 1;
         }
-        else if (execute(args) != 0){
+        else if (w == 0 && execute(args) != 0){
           return -1; //if the child did not execute properly, kill the child process
         }
       }
