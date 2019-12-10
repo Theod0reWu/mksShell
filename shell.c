@@ -36,39 +36,6 @@ Try starting with these restrictions on input:
 - You can limit piping (|) to a single pipe.
 */
 
-/*
-char ** parse_args_semicolon(char * line) ;
-The line argument is what was typed into the shell.
-It separates what was typed in at the semicolons and puts each command into char ** args
-returns char ** a, which is the array of the command and any arguments it comes with
-*/
-char ** parse_args_semicolon(char * line) {
-  char ** a = calloc(256, sizeof(char **)) ;
-  int i ;
-  char * q ;
-  for (i = 0 ; (q = strsep(&line, ";")) ; i++) {
-    if (strcmp(q,"") != 0){
-      a[i] = q ;
-    }
-    else {
-      i-- ;
-    }
-    //printf("|%s|\n",a[i] );
-  }
-  return a ;
-}
-
-/*
-char ** parse_args(char * line) ;
-The line argument are the seperate args without the semicolons
-It seperates this command at the spaces and puts each part into char ** args
-It also gets rid of spaces
-returns char ** args, which is the array of the command and any arguments it comes with
- */
-char ** parse_args_space(char * line) {
-  return parse_args(line, " ") ;
-}
-
 char ** parse_args(char * line, char * del) {
   char ** a = calloc(256, sizeof(char **)) ;
   int i ;
@@ -82,17 +49,68 @@ char ** parse_args(char * line, char * del) {
   return a ;
 }
 
+/*
+char ** parse_args_semicolon(char * line) ;
+The line argument is what was typed into the shell.
+It separates what was typed in at the semicolons and puts each command into char ** args
+returns char ** a, which is the array of the command and any arguments it comes with
+*/
+char ** parse_args_semicolon(char * line) {
+  return parse_args(line, ";") ;
+}
 
+/*
+char ** parse_args(char * line) ;
+The line argument are the seperate args without the semicolons
+It seperates this command at the spaces and puts each part into char ** args
+It also gets rid of spaces
+returns char ** args, which is the array of the command and any arguments it comes with
+ */
+char ** parse_args_space(char * line) {
+  return parse_args(line, " ") ;
+}
 
+/*
+int is_redirect(char * line) ;
+The argument is the line or command given.
+It checks whether there will be redirecting or not.
+
+*/
 int is_redirect(char * line){
   return strchr(line, '<') == NULL && strchr(line, '>') == NULL;
 }
 
-/*
-int pipe(char ** args) {
-  FILE * p ;
-  char ch ;
-  p = popen(args[],"r"); /* Unix 
+void pipe(char ** line) {
+  char ** first = calloc(256, sizeof(char *)) ;
+  char ** second = calloc(256, sizeof(char *)) ;
+  int i = 0 ;
+  int x = 0 ;
+  while (i < 256) {
+    if (line[i] != NULL) {
+      if (strcmp(line[i], "|")) {
+        // then we know that we're going to pipe!
+        first[x] = line[i] ;
+        x++ ;
+      }
+      else {
+        i = 9999 ;
+      }
+    }
+    i++ ; // otherwise keep going
+  }
+  x = 0 ;
+  while (i < 256) {
+    // now we're looking to see what the second command is
+    if (line[i] != NULL) {
+      second[x] = line[i] ;
+      x++ ;
+    }
+    i++ ;
+  }
+  int fd[2] ;
+}
+
+  /* Unix
 
   if (p == NULL) {
     printf("What process are you trying to run??!!\n") ;
@@ -108,8 +126,8 @@ int pipe(char ** args) {
 
     return 0;
 }
-
 */
+
 
 /*
 void redirecting(char ** args);
