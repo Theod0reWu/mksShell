@@ -205,7 +205,7 @@ int redirecting(char * line){
 
     copy = dup(fileno(stdout)) ; //
 
-    f =  open(files[0], O_WRONLY, O_CREAT);
+    f =  open(files[0], O_WRONLY | O_CREAT);
     if (f < 0){
       printf("The system cannot find the file specified.\n");
       return 0;
