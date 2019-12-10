@@ -48,9 +48,7 @@ int main() {
         int w = 0;
         if (is_redirect(commands[i])){
           //printf("is redirecting\n");
-          if (redirecting(commands[i]) == -1){
-            return -1;
-          }
+          if (redirecting(commands[i]) == -1) return -1;
           w = 1;
         }
 
