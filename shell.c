@@ -80,7 +80,20 @@ int is_redirect(char * line){
   return strchr(line, '<') == NULL && strchr(line, '>') == NULL;
 }
 
-void pipe(char ** line) {
+/*
+int is_piping(char * line) ;
+
+*/
+int is_piping(char * line) {
+  return strchr(line, '|') == NULL && strchr(line, '|') == NULL ;
+}
+
+/*
+void pipe_it_up(char ** line) ;
+It takes line as the argument so we check the user input given.
+It searches the command line to see if piping will happen
+*/
+void pipe_it_up(char ** line) {
   char ** first = calloc(256, sizeof(char *)) ;
   char ** second = calloc(256, sizeof(char *)) ;
   int i = 0 ;
@@ -93,7 +106,7 @@ void pipe(char ** line) {
         x++ ;
       }
       else {
-        i = 9999 ;
+        i = 9999 ; // it should just stop here and move on then
       }
     }
     i++ ; // otherwise keep going
@@ -120,7 +133,9 @@ void pipe(char ** line) {
   }
   else {
     // forking did not go as planned
-
+    close(fd[0]) ;
+    dup2(fd[1], STDOUT_FILENO) ;
+    if (execvp(first[0], first) == -1) printf("Error with piping regarding first commmand: %s/n", strerror(errno)) ;
   }
 }
 
