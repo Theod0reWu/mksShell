@@ -197,6 +197,9 @@ int redirecting(char * line){
     dup2(copy, fileno(stdin));
     close(f);
     //printf("file closed\n");
+    free(args);
+    free(files);
+    free(redir_parts);
     return worked;
   } else if (strchr(line,'>') != NULL){
     redir_parts = parse_args(line, ">");
@@ -215,6 +218,9 @@ int redirecting(char * line){
     dup2(copy, fileno(stdout));
     close(f);
     //printf("file closed\n");
+    free(args);
+    free(files);
+    free(redir_parts);
     return worked;
 
   }
