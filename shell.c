@@ -108,6 +108,11 @@ void pipe(char ** line) {
     i++ ;
   }
   int fd[2] ;
+  if (pipe(fd) == -1) printf("Error with piping: %s\n", strerror(errno)) ;
+  int f = fork() ;
+  if (f) {
+    // forking has been successful for now...
+  }
 }
 
   /* Unix
