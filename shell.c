@@ -174,15 +174,15 @@ int redirecting(char * line){
 
   if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, "<");
-    int nump;
-    for (nump = 0; redir_parts[nump] != NULL; nump++){NULL;}
+    //int nump;
+    //for (nump = 0; redir_parts[nump] != NULL; nump++){NULL;}
     //if (nump < 2) {printf("The syntax of the command is incorrect.\n");return 0;}
 
 
     args = parse_args(redir_parts[0], " ");
     files = parse_args(redir_parts[1], " ");
     //printf("redirecting\n");
-    
+
     copy = dup(fileno(stdin)); //stdin should be 0
     //printf("%s\n", redir_parts[1]);
     f =  open(files[0], O_RDONLY);
@@ -199,9 +199,24 @@ int redirecting(char * line){
     //printf("file closed\n");
     return worked;
   } else if (strchr(line,'>') != NULL){
-    // here is what happens when it's the ">" sign instead
-    //printf("Redirecting!\n") ;
+    redir_parts = parse_args(line, ">");
+    args = parse_args(redir_parts[0], " ");
+    files = parse_args(redir_parts[1], " ");
+
     copy = dup(fileno(stdout)) ; //
+
+    f =  open(files[0], O_WRONLY, O_CREAT);
+    if (f < 0){
+      printf("The system cannot find the file specified.\n");
+      return 0;
+    }
+    dup2(f, fileno(stdout));
+    worked = execute(args); //-1 = command failed
+    dup2(copy, fileno(stdout));
+    close(f);
+    //printf("file closed\n");
+    return worked;
+
   }
 
   return -2;
