@@ -46,7 +46,21 @@ int main() {
         if (is_redirect(commands[i]) && redirecting(commands[i]) == -1){
           return -1;
         }
-        else if (execute(args) != 0){
+        // PIPINGGGGGG
+        if (is_piping(commands[i])) {
+          int backupIN = dup(STDIN_FILENO) ;
+          int backupOUT = dup(STDOUT_FILENO) ;
+          int f = fork() ;
+          if (!f) pipe_it_up(commands[i]) ;
+          else {
+            int status ;
+            wait(&status) ;
+          }
+          dup2(backupIN, STDIN_FILENO);
+          dup2(backupOUT, STDOUT_FILENO);
+          // not sure about whether we should return an int or not
+        }
+        else if (execute(args) != 0) {
           return -1; //if the child did not execute properly, kill the child process
         }
       }
