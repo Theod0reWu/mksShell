@@ -23,4 +23,4 @@ int execute(char ** command);
 char ** parse_args(char * line, char * del);
 //int pipe(char ** args);
 int is_redirect(char * line);
-void pipe_it_up(char ** line);
+void pipe_it_up(FILE * qq);
