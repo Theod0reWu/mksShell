@@ -112,6 +112,15 @@ void pipe(char ** line) {
   int f = fork() ;
   if (f) {
     // forking has been successful for now...
+    int status ;
+    wait(&status) ; // i think this is right but not sure
+    close(fd[1]) ;
+    dup2(fd[0], STDIN_FILENO) ;
+    if (execvp(second[0], second) == -1) printf("Error with piping regarding second commmand: %s/n", strerror(errno)) ;
+  }
+  else {
+    // forking did not go as planned
+
   }
 }
 
