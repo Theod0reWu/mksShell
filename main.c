@@ -51,30 +51,9 @@ int main() {
           if (redirecting(commands[i]) == -1) return -1;
           w = 1;
         }
-
-        // PIPINGGGGGG
         else if(strchr(commands[i],'|')) {
           pipe_it_up(commands[i]) ;
-          /*FILE * output ;
-          output = popen(args[0],args[2]) ;
-          if (!output) {
-            printf("Error with insufficient amount or too many arguments: %s\n", strerror(errno)) ;
-            return -1 ;
-          }
-          pipe_it_up(output) ;
-
-          int backupIN = dup(STDIN_FILENO) ;
-          int backupOUT = dup(STDOUT_FILENO) ;
-          int f = fork() ;
-          if (!f) pipe_it_up(&commands[i]) ;
-          else {
-            int status ;
-            wait(&status) ;
-          }
-          dup2(backupIN, STDIN_FILENO);
-          dup2(backupOUT, STDOUT_FILENO);*/
         }
-
         else if (execute(args) != 0) {
           return -1; //if the child did not execute properly, kill the child process
         }
