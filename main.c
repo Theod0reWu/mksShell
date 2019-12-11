@@ -53,8 +53,9 @@ int main() {
         }
 
         // PIPINGGGGGG
-        else if(is_piping(commands[i])) {
-          FILE * output ;
+        else if(strchr(commands[i],'|')) {
+          pipe_it_up(commands[i]) ;
+          /*FILE * output ;
           output = popen(args[0],args[2]) ;
           if (!output) {
             printf("Error with insufficient amount or too many arguments: %s\n", strerror(errno)) ;
@@ -62,7 +63,7 @@ int main() {
           }
           pipe_it_up(output) ;
 
-          /*int backupIN = dup(STDIN_FILENO) ;
+          int backupIN = dup(STDIN_FILENO) ;
           int backupOUT = dup(STDOUT_FILENO) ;
           int f = fork() ;
           if (!f) pipe_it_up(&commands[i]) ;
