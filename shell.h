@@ -18,9 +18,9 @@
 
 char ** parse_args_space(char * line) ;
 char ** parse_args_semicolon(char * line) ;
-int redirecting(char * line);
-int execute(char ** command);
-char ** parse_args(char * line, char * del);
+int redirecting(char * line) ;
+int execute(char ** command) ;
+char ** parse_args(char * line, char * del) ;
 //int pipe(char ** args);
-int is_redirect(char * line);
-void pipe_it_up(FILE * qq);
+int is_redirect(char * line) ;
+void pipe_it_up(char * c) ;
