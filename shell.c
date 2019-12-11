@@ -106,27 +106,32 @@ int redirecting(char * line){
       arg[i] = line[i];
     }
     arg[i] = '\0';
-    args = parse_args(args, " ");
+    args = parse_args(arg, " ");
 
     i = 0;
-    char * s = strchr(line, '<');
+    char * s = strchr(line, '<') + 1;
     while (s != NULL &&  *s != '>'){
       infile[i] = *s;
       ++s;
       ++i;
     }
+    infile[i] = '\0';
 
     i = 0;
-    s = strchr(line, '>');
+    s = strchr(line, '>') + 1;
     while (s != NULL &&  *s != '<'){
       outfile[i] = *s;
       ++s;
       ++i;
     }
-    
+    infile[i] = '\0';
 
+    printf("%s\n", infile);
+    printf("%s\n", outfile);
 
     free(args);
+
+    return worked;
   }
   else if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, "<");
