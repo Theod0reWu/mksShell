@@ -100,9 +100,33 @@ int redirecting(char * line){
   char ** files;
 
   if (strchr(line,'<') != NULL && strchr(line,'>') != NULL) {
-    char del1[256]; char del2[256];
-    strcpy(del1, line); strcpy(del2, line);
-    char * lt = strsep(del1, "<"); char gt = strsep(del2, ">");
+    char arg[256]; char outfile[256]; char infile[256];
+    int i;
+    for (i = 0; line[i] != '<' && line[i] != '>'; i++){
+      arg[i] = line[i];
+    }
+    arg[i] = '\0';
+    args = parse_args(args, " ");
+
+    i = 0;
+    char * s = strchr(line, '<');
+    while (s != NULL &&  *s != '>'){
+      infile[i] = *s;
+      ++s;
+      ++i;
+    }
+
+    i = 0;
+    s = strchr(line, '>');
+    while (s != NULL &&  *s != '<'){
+      outfile[i] = *s;
+      ++s;
+      ++i;
+    }
+    
+
+
+    free(args);
   }
   else if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, "<");
