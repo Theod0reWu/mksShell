@@ -11,9 +11,11 @@ char ** parse_args(char * line, char * del) {
   int i ;
   char * q ;
   for (i = 0 ; (q = strsep(&line, del)) ; i++) {
-    if (strcmp(q,"") != 0){
+    if (strcmp(q,"") != 0) {
       a[i] = q ;
-    }else{i--;}
+    } else {
+      i-- ;
+    }
     //printf("|%s|\n",a[i] );
   }
   return a ;
@@ -58,7 +60,6 @@ the first command as the input to the second command that comes after the |.
 It does not return anything, but it will print and get errno involved when there is something wrong with one or more of the commands.
 */
 void pipe_it_up(char * c) {
-  //printf("pipe_it_up has been called\n") ;
   char ** args = parse_args(c, "|") ;
   char ** first = parse_args(args[0], " ") ; // this is the first command we will execute
   char ** second = parse_args(args[1], " ") ; // the output of the first command is used as the input for this command
@@ -102,7 +103,6 @@ int redirecting(char * line){
     char del1[256]; char del2[256];
     strcpy(del1, line); strcpy(del2, line);
     char * lt = strsep(del1, "<"); char gt = strsep(del2, ">");
-
   }
   else if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, "<");
