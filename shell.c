@@ -184,7 +184,6 @@ void pipe_it_up(char * c) {
 }
 */
 
-
 /*
 void redirecting(char ** args);
 The argument is the redirection command with either > or < (but these are not as the first argument)
@@ -199,7 +198,13 @@ int redirecting(char * line){
   char ** args;
   char ** files;
 
-  if (strchr(line,'<') != NULL){
+  if (strchr(line,'<') != NULL && strchr(line,'>') != NULL){
+    char del1[256]; char del2[256];
+    strcpy(del1, line); strcpy(del2, line);
+    char * lt = strsep(del1, "<"); char gt = strsep(del2, ">");
+
+  }
+  else if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, "<");
     //int nump;
     //for (nump = 0; redir_parts[nump] != NULL; nump++){NULL;}
@@ -215,7 +220,7 @@ int redirecting(char * line){
     f =  open(files[0], O_RDONLY);
 
     if (f < 0){
-      printf("The system cannot find the file specified.\n");
+      printf("< The system cannot find the file specified.\n");
       return 0;
     }
 
@@ -235,7 +240,7 @@ int redirecting(char * line){
 
     copy = dup(fileno(stdout)) ; //
 
-    f =  open(files[0], O_WRONLY | O_CREAT);
+    f =  open(files[0], O_WRONLY | O_CREAT, 0644);
     if (f < 0){
       printf("The system cannot find the file specified.\n");
       return 0;
