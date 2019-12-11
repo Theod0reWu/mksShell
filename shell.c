@@ -93,14 +93,31 @@ void pipe_it_up(char ** line) ;
 It takes line as the argument so we check the user input given.
 It searches the command line to see if piping will happen
 */
-void pipe_it_up(FILE * qq) {
-  printf("pipe_it_up was called\n") ;
-  int x ;
-  for (x = 0 ; x < 100; x++) {
-    fprintf(qq, "%d\n", x) ;
+void pipe_it_up(char * c) {
+  printf("pipe_it_up has been called\n") ;
+
+  char ** args = parse_args(c, "|") ;
+  char ** first = parse_args(args[0], " ") ;
+  char ** second = parse_args(args[1], " ") ;
+  int fd[2] ;
+  int f = fork() ;
+  if (!f) {
+    pipe(fd) ;
+    f = fork() ;
+    if (f) {
+      close(fd[0]) ;
+      dup2(fd[1], STDOUT_FILENO) ;
+      execvp(first[0], first) ;
+    }
+    else {
+      wait(NULL) ;
+      close(fd[1]) ;
+      dup2(fd[0], STDIN_FILENO) ;
+      execvp(second[0], second) ;
+    }
   }
-  if (ferror(qq)) {
-    fprintf(stderr, "Piping did not work out...\n") ;
+  else {
+    wait(NULL) ;
   }
 
   /*char ** first = calloc(256, sizeof(char *)) ;
