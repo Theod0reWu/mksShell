@@ -100,7 +100,7 @@ int redirecting(char * line){
   char ** files;
 
   if (strchr(line,'<') != NULL && strchr(line,'>') != NULL) {
-    printf("detected double redirecting\n");
+    //printf("detected double redirecting\n");
     char arg[256]; char outfile[256]; char infile[256];
     int i;
     for (i = 0; line[i] != '<' && line[i] != '>'; i++){
