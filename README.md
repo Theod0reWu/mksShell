@@ -16,9 +16,9 @@ Okay, so our shell doesn't set off any fireworks  <br />
 
 ## Function Headers
 - char ** parse_args_space(char * line) <br />
--char ** parse_args_semicolon(char * line) <br />
--int redirecting(char * line) <br />
--int execute(char ** command) <br />
--char ** parse_args(char * line, char * del) <br />
--int is_redirect(char * line) <br />
--void pipe_it_up(char * c) <br />
+- char ** parse_args_semicolon(char * line) <br />
+- int redirecting(char * line) <br />
+- int execute(char ** command) <br />
+- char ** parse_args(char * line, char * del) <br />
+- int is_redirect(char * line) <br />
+- void pipe_it_up(char * c) <br />
