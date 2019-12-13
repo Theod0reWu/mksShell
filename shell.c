@@ -102,9 +102,70 @@ int redirecting(char * line){
   char ** files;
 
   if (strchr(line,'<') != NULL && strchr(line,'>') != NULL) {
-    char del1[256]; char del2[256];
-    strcpy(del1, line); strcpy(del2, line);
-    char * lt = strsep(del1, "<"); char gt = strsep(del2, ">");
+    //printf("detected double redirecting\n");
+    char arg[256]; char outfile[256]; char infile[256];
+    int i;
+    for (i = 0; line[i] != '<' && line[i] != '>'; i++){
+      arg[i] = line[i];
+    }
+    arg[i] = '\0';
+    //printf("argument: %s\n", arg);
+    args = parse_args(arg, " ");
+
+    //printf("%s\n", line);
+
+    i = 0;
+    char * s = strchr(line, '<') + 1;
+    while (*s != '\0' &&  *s != '>'){
+     // printf("%s\n", s);
+      if (*s != ' '){
+        infile[i] = *s;
+        ++i;
+      }
+      ++s;
+    }
+    infile[i] = '\0';
+
+    //printf("%s\n", line);
+
+    i = 0;
+    s = strchr(line, '>') + 1;
+    while (*s != '\0' &&  *s != '<'){
+      //printf("%s\n", s);
+      //printf("%i\n", s == NULL);
+      if (*s != ' '){
+        outfile[i] = *s;
+        ++i;
+      }
+      ++s;
+    }
+    outfile[i] = '\0';
+
+    //printf("|%s|\n", infile);
+    //printf("|%s|\n", outfile);
+
+    int copy1 = dup(fileno(stdin));
+    int copy2 = dup(fileno(stdout));
+    int f1 =  open(infile, O_RDONLY);
+    int f2 =  open(outfile, O_WRONLY | O_CREAT, 0644);
+
+    if (f1 < 0 || f2 < 0){
+      printf("The system cannot find the file specified.\n");
+      return 0;
+    }
+
+    dup2(f1, fileno(stdin));
+    dup2(f2, fileno(stdout));
+    worked = execute(args);
+    dup2(copy1, fileno(stdin));
+    dup2(copy2, fileno(stdout));
+
+    close(f1);
+    close(f2);
+
+    free(args);
+
+    return worked;
   }
   else if (strchr(line,'<') != NULL){
     redir_parts = parse_args(line, "<");
