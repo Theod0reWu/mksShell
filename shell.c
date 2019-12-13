@@ -1,4 +1,6 @@
 #include "shell.h"
+#define READ 0
+#define WRITE 1
 
 /*
 char ** parse_args(char * line) ;
@@ -66,17 +68,17 @@ void pipe_it_up(char * c) {
   int fd[2] ;
   int f = fork() ;
   if (!f) {
-    pipe(fd) ;
+    if (pipe(fd) == -1) printf("Error with creating unnamed pipe: %s\n", strerror(errno)) ; ;
     f = fork() ;
     if (f) {
-      close(fd[0]) ;
-      dup2(fd[1], STDOUT_FILENO) ;
+      close(fd[READ]) ;
+      dup2(fd[WRITE], STDOUT_FILENO) ;
       if (execvp(first[0], first) == -1) printf("Error with piping regarding first commmand: %s/n", strerror(errno)) ;
     }
     else {
       wait(NULL) ;
-      close(fd[1]) ;
-      dup2(fd[0], STDIN_FILENO) ;
+      close(fd[WRITE]) ;
+      dup2(fd[READ], STDIN_FILENO) ;
       if (execvp(second[0], second) == -1) printf("Error with piping regarding second commmand: %s/n", strerror(errno)) ;
     }
   }
