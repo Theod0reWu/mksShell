@@ -61,30 +61,22 @@ It identifies the first and second commands, executes the first one if possible,
 the first command as the input to the second command that comes after the |.
 It does not return anything, but it will print and get errno involved when there is something wrong with one or more of the commands.
 */
-int pipe_it_up(char * c) {
-  char ** arg = parse_args(c, "|") ;
-  char ** first = parse_args(arg[0], " ") ;
-  char ** second = parse_args(arg[1], " ") ;
+int pipe_it_up(char * comd) {
+  char ** a = parse_args(comd, "|") ;
+  char * first = a[0] ;
+  char * second = a[1] ;
+  char line[256] ; char c[256] ;
+  FILE * r = popen(first,"r") ;
+  while (fgets(line, 256, r)) {
+    line[sizeof(line) - 1] = 0 ;
+    strcat(c, line) ;
+  }
+  pclose(r) ;
+  FILE * w = popen(second, "w") ;
+  fprintf(w, "%s", c) ;
+  pclose(w) ;
+  return 0 ;
 
-  int copy1 = dup(fileno(stdin)) ;
-  int copy2 = dup(fileno(stdout)) ;
-  int f1 =  open(first, O_RDONLY);
-  int f2 =  open(second, O_WRONLY | O_CREAT, 0644);
-
-  dup2(f1, fileno(stdin)) ;
-  dup2(f2, fileno(stdout)) ;
-  worked = execute(arg[0]) ;
-  // we need to get from running the first commmand as what we put as stdin
-  dup2(copy1, fileno(stdin));
-  dup2(copy2, fileno(stdout));
-  worked = execute() ;
-
-  close(f1);
-  close(f2);
-
-  free(args);
-
-  return worked;
   /*char ** args = parse_args(c, "|") ;
   char ** first = parse_args(args[0], " ") ; // this is the first command we will execute
   char ** second = parse_args(args[1], " ") ; // the output of the first command is used as the input for this command
