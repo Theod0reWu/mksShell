@@ -8,6 +8,8 @@ int main() {
   char ** args;
   int parent_pid = getpid();
   while (1) {
+    printf("Parent id: %d\n", getppid()) ;
+
     // INFINITE LOOP!!
     //printf("%i\n", fileno(stdin));
     printf("%s$ ", getcwd(dir, sizeof(dir)) ) ; // prints out current path - where we at
@@ -29,6 +31,7 @@ int main() {
 
       if (strcmp(args[0], "exit") == 0){
         //printf("exiting\n");
+        printf("Parent id: %d\n", getppid()) ;
         return 0;
       }
       else if (strcmp(args[0], "cd") == 0) {
@@ -52,7 +55,10 @@ int main() {
           w = 1;
         }
         else if(strchr(commands[i],'|')) {
-          pipe_it_up(commands[i]) ;
+          if (pipe_it_up(commands[i]) == -1) {
+            printf("At least one of the commands entered is invalid\n") ;
+            return -1 ;
+          }
         }
         else if (execute(args) != 0) {
           return -1; //if the child did not execute properly, kill the child process
@@ -64,7 +70,7 @@ int main() {
 
     strcpy(line, "");
     free(commands);
-    args = '\0';
+    //args = '\0';
   } // end of initial while loop!!
   return 0 ;
 }
