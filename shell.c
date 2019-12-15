@@ -61,8 +61,31 @@ It identifies the first and second commands, executes the first one if possible,
 the first command as the input to the second command that comes after the |.
 It does not return anything, but it will print and get errno involved when there is something wrong with one or more of the commands.
 */
-void pipe_it_up(char * c) {
-  char ** args = parse_args(c, "|") ;
+int pipe_it_up(char * c) {
+  char ** arg = parse_args(c, "|") ;
+  char ** first = parse_args(arg[0], " ") ;
+  char ** second = parse_args(arg[1], " ") ;
+
+  int copy1 = dup(fileno(stdin)) ;
+  int copy2 = dup(fileno(stdout)) ;
+  int f1 =  open(first, O_RDONLY);
+  int f2 =  open(second, O_WRONLY | O_CREAT, 0644);
+
+  dup2(f1, fileno(stdin)) ;
+  dup2(f2, fileno(stdout)) ;
+  worked = execute(arg[0]) ;
+  // we need to get from running the first commmand as what we put as stdin
+  dup2(copy1, fileno(stdin));
+  dup2(copy2, fileno(stdout));
+  worked = execute() ;
+
+  close(f1);
+  close(f2);
+
+  free(args);
+
+  return worked;
+  /*char ** args = parse_args(c, "|") ;
   char ** first = parse_args(args[0], " ") ; // this is the first command we will execute
   char ** second = parse_args(args[1], " ") ; // the output of the first command is used as the input for this command
   int fd[2] ;
@@ -85,6 +108,7 @@ void pipe_it_up(char * c) {
   else {
     wait(NULL) ;
   }
+  printf("");*/
 }
 
 /*
