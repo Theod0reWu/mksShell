@@ -1,9 +1,10 @@
 #include "shell.h"
+
 /*
 char ** parse_args(char * line) ;
-The line argument is what was typed into the shell.
-It separates what was typed in at del (the delimiter) and puts each command into char ** args
-returns char ** a, which is an array
+Argument: what is typed into the shell
+Separates what was typed in at del (the delimiter) and puts each command into char ** args
+Returns: char ** a, which is an array
 */
 char ** parse_args(char * line, char * del) {
   char ** a = calloc(256, sizeof(char **)) ;
@@ -22,20 +23,20 @@ char ** parse_args(char * line, char * del) {
 
 /*
 char ** parse_args_semicolon(char * line) ;
-The line argument is what was typed into the shell.
-It separates what was typed in at the semicolons and puts each command into char ** args
-returns char ** a, which is the array of the command and any arguments it comes with
+Argument: what is typed into the shell
+Separates what was typed in at the semicolons and puts each command into char ** args
+Returns: an array of the commands typed in to run
+This calls parse_args so it was created more for convenience
 */
 char ** parse_args_semicolon(char * line) {
   return parse_args(line, ";") ;
 }
 
 /*
-char ** parse_args(char * line) ;
-The line argument are the seperate args without the semicolons
-It seperates this command at the spaces and puts each part into char ** args
-It also gets rid of spaces
-returns char ** args, which is the array of the command and any arguments it comes with
+char ** parse_args_space(char * line) ;
+Argument: the command given
+Separates this command at the spaces and puts each part into char ** args && it gets rid of extra spaces that used to cause issues!
+Returns: an array of the command and any arguments it comes with
  */
 char ** parse_args_space(char * line) {
   return parse_args(line, " ") ;
@@ -43,93 +44,22 @@ char ** parse_args_space(char * line) {
 
 /*
 int is_redirect(char * line) ;
-The argument is the line or command given.
-It checks whether there will be redirecting or not.
-Returns
+Argument: the line or command given
+Checks whether there will be redirecting or not
+Returns 1 if the command involves redirection
 */
-int is_redirect(char * line){
+int is_redirect(char * line) {
   return strchr(line, '<') != NULL || strchr(line, '>') != NULL;
 }
 
 /*
-void pipe_it_up(char ** line) ;
-It takes c as the argument so we check the user input given. We will use this to determine which commands we need to run.
-It identifies the first and second commands, executes the first one if possible, and then uses the output from
-the first command as the input to the second command that comes after the |.
-It does not return anything, but it will print and get errno involved when there is something wrong with one or more of the commands.
-*/
-int pipe_it_up(char * c) {
-  char ** args = parse_args(c, "|") ;
-  char ** first = parse_args_space(args[0]) ;
-  char ** second = parse_args_space(args[1]) ;
-  int fd[2] ;
-  int p ;
-  int backup = dup(0) ;
-  int backup2 = dup(1) ;
-  pipe(fd) ;
-  p = fork() ;
-  if (p) {
-    close(fd[1]) ;
-    backup = dup(0) ;
-    dup2(fd[0], 0) ;
-    if (execvp(second[0], second) == -1) {
-      printf("Error with first command: %s\n", strerror(errno)) ;
-      return -1 ;
-    }
-    dup2(backup, 0) ;
-    close(backup) ;
-    close(fd[0]) ;
-  }
-  else {
-    close(fd[0]) ;
-    backup2 = dup(1) ;
-    dup2(fd[1], 1) ;
-    if (execvp(first[0], first) == -1) {
-      printf("Error with first command: %s\n", strerror(errno)) ;
-      return -1 ;
-    }
-    dup2(backup2, 1) ;
-    close(backup2) ;
-    close(fd[1]) ;
-  }
-  return 0 ;
-}
-
-
-
-
-/*  int fd[2] ;
-  int f = fork() ;
-  if (pipe(fd) == -1) {
-    printf("Error with piping before forking! %s\n", strerror(errno)) ;
-    return -1 ;
-  }
-  if (f) {
-    close(fd[READ]) ;
-    dup2(fd[WRITE], STDOUT_FILENO) ;
-    if (execvp(first[0], first) == -1) {
-      printf("Error with piping regarding first commmand: %s/n", strerror(errno)) ;
-      return -1 ;
-    }
-  }
-  else {
-    wait(NULL) ;
-    close(fd[WRITE]) ;
-    dup2(fd[READ], STDIN_FILENO) ;
-    if (execvp(second[0], second) == -1) {
-      printf("Error with piping regarding second commmand: %s/n", strerror(errno)) ;
-      return -1 ;
-    }
-  }
-  return 0 ;*/
-
-/*
 void redirecting(char ** args);
-The argument is the redirection command with either > or < (but these are not as the first argument)
+Argument: the redirection command with either > or < (but these are not as the first argument)
 The next thing after the >,< should be the file name
-This executes the command and returns 0 if it worked.
+Executes the command
+Returns 0 if it worked
 */
-int redirecting(char * line){
+int redirecting(char * line) {
   int f;
   int copy;
   int worked = 0;
@@ -258,10 +188,55 @@ int redirecting(char * line){
 }
 
 /*
+int pipe_it_up(char ** line) ;
+Argument: the user input given (the command)
+Uses input to determine which 2 commands need to be run
+Identifies the first and second commands, executes the first one if possible,
+and then pipes!
+Returns 0 if successful and returns -1 if something went wrong.
+*/
+int pipe_it_up(char * c) {
+  char ** args = parse_args(c, "|") ;
+  char ** first = parse_args_space(args[0]) ;
+  char ** second = parse_args_space(args[1]) ;
+  int fd[2] ;
+  int p ;
+  int backup = dup(0) ;
+  int backup2 = dup(1) ;
+  pipe(fd) ;
+  p = fork() ;
+  if (p) {
+    close(fd[1]) ;
+    backup = dup(0) ;
+    dup2(fd[0], 0) ;
+    if (execvp(second[0], second) == -1) {
+      printf("Error with first command: %s\n", strerror(errno)) ;
+      return -1 ;
+    }
+    dup2(backup, 0) ;
+    close(backup) ;
+    close(fd[0]) ;
+  }
+  else {
+    close(fd[0]) ;
+    backup2 = dup(1) ;
+    dup2(fd[1], 1) ;
+    if (execvp(first[0], first) == -1) {
+      printf("Error with first command: %s\n", strerror(errno)) ;
+      return -1 ;
+    }
+    dup2(backup2, 1) ;
+    close(backup2) ;
+    close(fd[1]) ;
+  }
+  return 0 ;
+}
+
+/*
 int execute(char ** command);
-It takes the command given as a parameter.
-This executes the command given by forking.
-This returns 0 if it worked!
+Argument: the command given
+Executes the command given by forking
+Returns 0 if it worked!
 */
 int execute(char ** args){
   if (fork() == 0){
