@@ -1,7 +1,4 @@
 #include "shell.h"
-#define READ 0
-#define WRITE 1
-
 /*
 char ** parse_args(char * line) ;
 The line argument is what was typed into the shell.
@@ -61,46 +58,70 @@ It identifies the first and second commands, executes the first one if possible,
 the first command as the input to the second command that comes after the |.
 It does not return anything, but it will print and get errno involved when there is something wrong with one or more of the commands.
 */
-int pipe_it_up(char * comd) {
-  char ** a = parse_args(comd, "|") ;
-  char ** first = parse_args(a[0], " ") ; // this is the first command split on the spaces
-  char ** second = parse_args(a[1], " ") ; // this is the second command split on the spaces
-  if (execute(first) == -1 || execute(second) == -1) return -1 ;
-  else {
-    FILE * output = popen(a[0],"r") ;
-    char * thing = malloc(256 * sizeof(char)) ;
-    fgets(thing, 256, output) ;
-    pclose(output) ;
-    FILE * output2 = popen(a[1],"w") ;
-    fprintf(output2, thing) ;
-    pclose(output2) ;
-    return 0 ;
-  }
-  /*char ** args = parse_args(c, "|") ;
-  char ** first = parse_args(args[0], " ") ; // this is the first command we will execute
-  char ** second = parse_args(args[1], " ") ; // the output of the first command is used as the input for this command
+int pipe_it_up(char * c) {
+  char ** args = parse_args(c, "|") ;
+  char ** first = parse_args_space(args[0]) ;
+  char ** second = parse_args_space(args[1]) ;
   int fd[2] ;
-  int f = fork() ;
-  if (!f) {
-    if (pipe(fd) == -1) printf("Error with creating unnamed pipe: %s\n", strerror(errno)) ; ;
-    f = fork() ;
-    if (f) {
-      close(fd[READ]) ;
-      dup2(fd[WRITE], STDOUT_FILENO) ;
-      if (execvp(first[0], first) == -1) printf("Error with piping regarding first commmand: %s/n", strerror(errno)) ;
+  int p ;
+  int backup = dup(0) ;
+  int backup2 = dup(1) ;
+  pipe(fd) ;
+  p = fork() ;
+  if (p) {
+    close(fd[1]) ;
+    backup = dup(0) ;
+    dup2(fd[0], 0) ;
+    if (execvp(second[0], second) == -1) {
+      printf("Error with first command: %s\n", strerror(errno)) ;
+      return -1 ;
     }
-    else {
-      wait(NULL) ;
-      close(fd[WRITE]) ;
-      dup2(fd[READ], STDIN_FILENO) ;
-      if (execvp(second[0], second) == -1) printf("Error with piping regarding second commmand: %s/n", strerror(errno)) ;
+    dup2(backup, 0) ;
+    close(backup) ;
+    close(fd[0]) ;
+  }
+  else {
+    close(fd[0]) ;
+    backup2 = dup(1) ;
+    dup2(fd[1], 1) ;
+    if (execvp(first[0], first) == -1) {
+      printf("Error with first command: %s\n", strerror(errno)) ;
+      return -1 ;
+    }
+    dup2(backup2, 1) ;
+    close(backup2) ;
+    close(fd[1]) ;
+  }
+  return 0 ;
+}
+
+
+
+
+/*  int fd[2] ;
+  int f = fork() ;
+  if (pipe(fd) == -1) {
+    printf("Error with piping before forking! %s\n", strerror(errno)) ;
+    return -1 ;
+  }
+  if (f) {
+    close(fd[READ]) ;
+    dup2(fd[WRITE], STDOUT_FILENO) ;
+    if (execvp(first[0], first) == -1) {
+      printf("Error with piping regarding first commmand: %s/n", strerror(errno)) ;
+      return -1 ;
     }
   }
   else {
     wait(NULL) ;
+    close(fd[WRITE]) ;
+    dup2(fd[READ], STDIN_FILENO) ;
+    if (execvp(second[0], second) == -1) {
+      printf("Error with piping regarding second commmand: %s/n", strerror(errno)) ;
+      return -1 ;
+    }
   }
-  printf("");*/
-}
+  return 0 ;*/
 
 /*
 void redirecting(char ** args);
