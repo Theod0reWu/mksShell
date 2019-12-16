@@ -31,10 +31,10 @@ int main() {
       strcpy(commandcopy, commands[i]) ;
       args = parse_args_space(commandcopy) ; // now the input has been separated by spaces
 
-      if (strcmp(args[0], "exit") == 0){
+      if (strcmp(args[0], "exit") == 0) {
         //printf("exiting\n");
         //printf("Parent id: %d\n", getppid()) ;
-        return 0;
+        return 0 ;
       }
 
       else if (strcmp(args[0], "cd") == 0) {
@@ -69,14 +69,14 @@ int main() {
           }
         }
         else if (execute(args) != 0) {
-          return -1; //if the child did not execute properly, kill the child process
+          return -1 ; //if the child did not execute properly, kill the child process
         }
       }
       i++ ;
       free(args);
     }
 
-    strcpy(line, "");
+    strcpy(line, "") ;
     free(commands);
     //args = '\0';
   } // end of initial while loop!!
