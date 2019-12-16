@@ -22,4 +22,4 @@ int redirecting(char * line) ;
 int execute(char ** command) ;
 char ** parse_args(char * line, char * del) ;
 int is_redirect(char * line) ;
-int pipe_it_up(char * comd) ;
+int pipe_it_up(char * c) ;
