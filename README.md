@@ -7,13 +7,16 @@ _Okay, so our shell doesn't set off any fireworks_  <br />
 **BUT** it can do the following things:   <br />
 - take in commands seperated by semicolons (singular or double!)   <br />
 - execute various commands such as: cd, ls, cat, echo, clear, exit, and more!   <br /> 
-- allows for redirection and piping, including double redirection <br />
+- allow for redirection and piping (you can commands by themselves or with additional arguments such as ls -l), including double redirection <br />
 - allow any number of spaces can be placed between commands and other identifiers, including semicolons, piping and redirection    <br /> 
-- gives correct error messages for wrong file names and other mistyped commands <br />
+- give correct error messages for wrong file names and other mistyped commands <br />
 
 ## Features Attempted but Unsuccessful
 
+
 ## Bugs & Other Things You Might Want to Know 
+- When piping, if the first command given cannot be executed but the second one can be, we are still somehow able to execute the second command. For example, with jksngnsgns | wc, we get        1      9      52
+  - However, if both commands can't be executed since they're not commands, we'll stop you so that's a good thing!
 
 ## Function Headers
 #### char ** parse_args(char * line) ;
@@ -32,17 +35,17 @@ _Okay, so our shell doesn't set off any fireworks_  <br />
 #### int is_redirect(char * line) ;
   - Argument: the line or command given
   - Checks whether there will be redirecting or not
-  - Returns
+  - Returns 1 if the command involves redirection
 #### int redirecting(char * line) ;
   - Argument: the redirection command with either > or < (but these are not as the first argument)
   - The next thing after the >,< should be the file name
   - Executes the command
   - Returns 0 if it worked
-#### void pipe_it_up(char * c) ;
-  - Argument: the user input given
-  - Uses input to determine which commands need to be run
-  - Identifies the first and second commands, executes the first one if possible, and then uses the output from the first command as the input to the second command that comes after the |.
-  - Does not return anything, but it will print and get errno involved when there is something wrong with one or more of the commands.
+#### int pipe_it_up(char * c) ;
+   - Argument: the user input given (the command)
+   - Uses input to determine which 2 commands need to be run
+   - Identifies the first and second commands, executes the first one if possible, and then pipes!
+   - Returns 0 if successful and returns -1 if something went wrong.
 #### int execute(char ** command) ;
   - Argument: the command given
   - Executes the command given by forking
