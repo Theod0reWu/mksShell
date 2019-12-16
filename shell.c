@@ -63,20 +63,19 @@ It does not return anything, but it will print and get errno involved when there
 */
 int pipe_it_up(char * comd) {
   char ** a = parse_args(comd, "|") ;
-  char * first = a[0] ;
-  char * second = a[1] ;
-  char line[256] ; char c[256] ;
-  FILE * r = popen(first,"r") ;
-  while (fgets(line, 256, r)) {
-    line[sizeof(line) - 1] = 0 ;
-    strcat(c, line) ;
+  char ** first = parse_args(a[0], " ") ; // this is the first command split on the spaces
+  char ** second = parse_args(a[1], " ") ; // this is the second command split on the spaces
+  if (execute(first) == -1 || execute(second) == -1) return -1 ;
+  else {
+    FILE * output = popen(a[0],"r") ;
+    char * thing = malloc(256 * sizeof(char)) ;
+    fgets(thing, 256, output) ;
+    pclose(output) ;
+    FILE * output2 = popen(a[1],"w") ;
+    fprintf(output2, thing) ;
+    pclose(output2) ;
+    return 0 ;
   }
-  pclose(r) ;
-  FILE * w = popen(second, "w") ;
-  fprintf(w, "%s", c) ;
-  pclose(w) ;
-  return 0 ;
-
   /*char ** args = parse_args(c, "|") ;
   char ** first = parse_args(args[0], " ") ; // this is the first command we will execute
   char ** second = parse_args(args[1], " ") ; // the output of the first command is used as the input for this command
