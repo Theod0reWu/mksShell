@@ -53,7 +53,14 @@ int main() {
           w = 1;
         }
         else if (strchr(commands[i], '|') != NULL) {
-          if (pipe_it_up(commands[i]) == -1) return -1 ;
+          int f = fork() ;
+          if (f) {
+            int status ;
+            wait(&status) ;
+          }
+          else {
+            if (pipe_it_up(commands[i]) == -1) return -1 ;
+          }
         }
         else if (execute(args) != 0) {
           return -1; //if the child did not execute properly, kill the child process
