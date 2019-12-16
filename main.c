@@ -1,5 +1,11 @@
 #include "shell.h"
 
+/*
+int main() ;
+Doesn't take any arguments! It just does what it has.
+Detects the command that the user has entered and executes it as long as it's a command.
+Returns 0 if successful and -1 if not.
+*/
 int main() {
   char dir[256] ;
   char line[256] ;
